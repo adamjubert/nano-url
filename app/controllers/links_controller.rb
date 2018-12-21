@@ -1,5 +1,5 @@
 class LinksController < ApplicationController
-  before_action :set_link
+  before_action :set_link, only: %i[show create]
 
   def top
     count_visits_sql = Arel.sql('count(visits.id) desc')
@@ -9,27 +9,30 @@ class LinksController < ApplicationController
                  .order(count_visits_sql)
                  .limit(100)
 
-    json_response(@links)
+    json_response(@links.to_json(only: %i[title long_link short_link]))
   end
 
   def show
     respond_to do |format|
       if @link.present?
         @link.create_visit!
-        format.json { json_response(@link) }
+        format.json { json_response(@link.to_json(only: %i[long_link short_link])) }
         format.html { redirect_to @link.http_link }
       else
         format.json { render json: { errors: 'Invalid URL' } }
+        format.html { render file: 'public/404', layout: false, status: :not_found }
       end
     end
   end
 
   def create
+    link = Link.find_or_initialize_by(link_params)
+
     respond_to do |format|
-      if @link.present? || @link.save(link_params)
-        format.json { json_response(@link) }
+      if Link.exists?(link.id) || link.save
+        format.json { json_response(link.to_json(only: %i[long_link short_link])) }
       else
-        format.json { render json: { errors: @link.errors.full_messages } }
+        format.json { render json: { errors: link.errors.full_messages } }
       end
     end
   end
