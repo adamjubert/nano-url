@@ -2,12 +2,7 @@ class LinksController < ApplicationController
   before_action :set_link, only: %i[show create]
 
   def top
-    count_visits_sql = Arel.sql('count(visits.id) desc')
-
-    @links = Link.joins(:visits)
-                 .group('links.id')
-                 .order(count_visits_sql)
-                 .limit(100)
+    @links = Link.top_links(100)
 
     json_response(@links.to_json(only: %i[title long_link short_link]))
   end
