@@ -10,6 +10,6 @@ unless Link.first.present?
 
     visits_count.times { link.visits.create }
 
-    puts "Ceated Link #{link.id} and #{visits_count} visits."
+    puts "Created #{link.inspect} and #{visits_count} visits."
   end
 end
