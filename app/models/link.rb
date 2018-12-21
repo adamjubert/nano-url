@@ -3,6 +3,7 @@ class Link < ApplicationRecord
 
   validates :long_link, presence: true
 
+  before_create :strip_whitespace
   after_create :generate_short_link, :fetch_title
 
   def create_visit!
@@ -16,6 +17,10 @@ class Link < ApplicationRecord
   end
 
   private
+
+  def strip_whitespace
+    self.long_link = long_link.strip
+  end
 
   # Utilizes Base36 Encoding: https://en.wikipedia.org/wiki/Base36
   def generate_short_link

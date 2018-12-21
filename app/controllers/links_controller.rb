@@ -24,9 +24,23 @@ class LinksController < ApplicationController
     end
   end
 
+  def create
+    respond_to do |format|
+      if @link.present? || @link.save(link_params)
+        format.json { json_response(@link) }
+      else
+        format.json { render json: { errors: @link.errors.full_messages } }
+      end
+    end
+  end
+
   private
 
   def set_link
     @link = Link.find_by(short_link: params[:id])
+  end
+
+  def link_params
+    params.require(:link).permit(:long_link)
   end
 end
