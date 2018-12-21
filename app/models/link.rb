@@ -3,7 +3,7 @@ class Link < ApplicationRecord
 
   validates :long_link, presence: true
 
-  after_create :generate_short_link
+  after_create :generate_short_link, :fetch_title
 
   def create_visit!
     visits.create(link_id: id)
@@ -21,6 +21,10 @@ class Link < ApplicationRecord
   def generate_short_link
     self.short_link = id.to_s(36)
     save!
+  end
+
+  def fetch_title
+    FetchTitleJob.perform_now(self)
   end
 
   def starts_with_http_or_https?
