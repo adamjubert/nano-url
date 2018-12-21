@@ -8,7 +8,7 @@ class FetchTitleJob < ApplicationJob
     title     = document.at('title').text
 
     link.update_attributes(title: title)
-  rescue SocketError => error
-    puts "Invalid long_link '#{http_link}' for Link id '#{link.id}'. Details: #{error}"
+  rescue => error
+    puts "Error fetching title for #{link.inspect}. Details: #{error}"
   end
 end

@@ -1,7 +1,15 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+unless Link.first.present?
+  file       = File.open('./spec/data/moz_top_500.csv')
+  long_links = CSV.parse(file).flatten[0..150]
+
+  file.close
+
+  long_links.each do |long_link|
+    link         = Link.create(long_link: long_link)
+    visits_count = rand(1..5)
+
+    visits_count.times { link.visits.create }
+
+    puts "Created #{link.inspect} and #{visits_count} visits."
+  end
+end

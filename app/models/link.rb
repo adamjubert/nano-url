@@ -18,6 +18,15 @@ class Link < ApplicationRecord
   before_create :strip_whitespace
   after_create :generate_short_link, :fetch_title
 
+  def self.top_links(num)
+    count_visits_sql = Arel.sql('count(visits.id) desc')
+
+    Link.joins(:visits)
+        .group('links.id')
+        .order(count_visits_sql)
+        .limit(num)
+  end
+
   def create_visit!
     visits.create(link_id: id)
   end
@@ -27,6 +36,7 @@ class Link < ApplicationRecord
 
     "http://#{long_link}"
   end
+
 
   private
 
