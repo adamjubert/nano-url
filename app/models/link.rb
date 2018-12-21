@@ -1,7 +1,13 @@
 class Link < ApplicationRecord
+  has_many :visits
+
   validates :long_link, presence: true
 
   after_create :generate_short_link
+
+  def create_visit!
+    visits.create(link_id: id)
+  end
 
   def http_link
     return long_link if starts_with_http_or_https?
