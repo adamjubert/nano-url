@@ -1,17 +1,30 @@
 # README
 
+## Setup
+```
+$ https://github.com/adamjubert/nano-url.git
+$ cd nano-url/
+$ bundle install
+$ bundle exec rake db:create db:migrate
+$ rails s
+```
+
+If you would like to seed the database with 150 URLs from the Moz Top 500, you can run `bundle exec rake db:seed`. This will take a couple of minutes.
+
+You can then open a new terminal window and run any of the following terminal commands.
+
 ## Terminal Commands
 
 ### GET /top
 View the top 100 most frequently visited links
-`curl localhost:3000/top.json`
+`$ curl localhost:3000/top.json`
 
 Response
 `[{"long_link":"google.com","short_link":"11","title":"Google"},{"long_link":"google.co.uk","short_link":"19","title":"Google"}]`
 
 ### GET /links/:short_link
-View the link at this url
-`curl localhost:3000/links/1a`
+View the link at a specific short url (for example, 1a)
+`$ curl localhost:3000/links/1a`
 
 200 Response
 `{"long_link":"cnn.com","short_link":"1a"}`
@@ -19,9 +32,12 @@ View the link at this url
 404 Response
 `{"errors":"Invalid URL"}`
 
+Visiting the short URL in your browser window will redirect you to the long URL.
+`http://localhost:3000/links/1e` => `http://cnn.com
+
 ### POST /links
 Create a new short url for "github.com"
-`curl -d "link[long_link]=github.com" localhost:3000/links`
+`$ curl -d "link[long_link]=github.com" localhost:3000/links`
 
 200 Response
 `{"long_link":"github.com","short_link":"1a"}`
