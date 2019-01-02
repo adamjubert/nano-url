@@ -2,7 +2,7 @@
 
 ## Setup
 ```
-$ https://github.com/adamjubert/nano-url.git
+$ git clone https://github.com/adamjubert/nano-url.git
 $ cd nano-url/
 $ bundle install
 $ bundle exec rake db:create db:migrate
